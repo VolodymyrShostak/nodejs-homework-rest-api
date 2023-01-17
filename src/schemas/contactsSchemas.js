@@ -7,7 +7,7 @@ const addSchema = Joi.object({
     .required(),
   phone: Joi.string()
     .trim()
-    .regex(/^[6-9]\d{9}$/)
+    // .regex(/^[6-9]\d{9}$/)
     .required(),
 });
 
@@ -18,8 +18,9 @@ const updateSchema = Joi.object({
     tlds: { allow: ["com", "net"] },
   }),
   phone: Joi.string()
-    .trim()
-    .regex(/^[6-9]\d{9}$/),
-}).or("name", "email", "phone");
+    .trim(),
+  favorite: Joi.boolean(),
 
+}).or("name", "email", "phone", "favorite");
+  
 module.exports = { addSchema, updateSchema };

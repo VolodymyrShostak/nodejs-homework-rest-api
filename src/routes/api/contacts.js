@@ -6,6 +6,7 @@ const {
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact
 } = require("../../controllers/cont.controllers");
 const {
   updateContactValidation,
@@ -19,6 +20,7 @@ router
   .get("/:id", getById)
   .post("/", addContactValidation, addContact)
   .delete("/:id", removeContact)
-  .put("/:id", updateContactValidation, updateContact);
+  .put("/:id", updateContactValidation, updateContact)
+  .patch("/:id", updateContactValidation, updateStatusContact);
 
 module.exports = router;

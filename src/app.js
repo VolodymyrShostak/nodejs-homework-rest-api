@@ -1,10 +1,28 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
-
+const mongoose = require("mongoose");
 const contactsRouter = require("./routes/api/contacts");
+require("dotenv").config();
+
 
 const app = express();
+ 
+mongoose.set("strictQuery", true);
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.vda0eke.mongodb.net/db-contacts?retryWrites=true&w=majority`
+  )
+  .then(() => {
+    console.log("Database connection successful")
+  })
+  .catch((err) => {
+    console.log(err);
+    process.exit(1);
+    
+  });
+
+
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
