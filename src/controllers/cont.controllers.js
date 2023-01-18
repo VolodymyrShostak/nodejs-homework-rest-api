@@ -41,17 +41,18 @@ const removeContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone } = req.body;
-  const contact = await Contact.findByIdAndUpdate(id);
+  
+  const contact = await Contact.findByIdAndUpdate(id, req.body, { new: true });
   if (!contact) {
     return res.status(404).json({
       status: "failure",
       message: `Contact with id '${id}' not found`,
     });
   }
-  contact.name = name;
-  contact.email = email;
-  contact.phone = phone;
+  contact.name = req.body.name;
+  contact.email = req.body.email;
+  contact.phone = req.body.phone;
+  contact.favorite = req.body.favorite;
 
   res
     .status(200)
@@ -59,15 +60,15 @@ const updateContact = async (req, res) => {
 };
 const updateStatusContact = async (req, res) => {
   const { id } = req.params;
-  const { favorite } = req.body;
-  const contact = await Contact.findByIdAndUpdate(id);
+  
+  const contact = await Contact.findByIdAndUpdate(id, req.body);
   if (!contact) {
     return res.status(404).json({
       status: "failure",
       message: `Contact with id '${id}' not found`,
     });
   }
-  contact.favorite = favorite;
+  contact.favorite = req.body.favorite;
   res
     .status(200)
     .json({ contact, status: "success", message: "Contact updated" });

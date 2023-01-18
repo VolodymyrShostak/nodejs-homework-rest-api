@@ -9,6 +9,7 @@ const addSchema = Joi.object({
     .trim()
     // .regex(/^[6-9]\d{9}$/)
     .required(),
+  favorite: Joi.boolean(),
 });
 
 const updateSchema = Joi.object({
