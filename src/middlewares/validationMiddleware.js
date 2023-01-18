@@ -6,7 +6,7 @@ module.exports = {
       return res
         .status(400)
         .json({
-          message: "Contact fields are not filled. All fields is required",
+          message: "Contact fields are not filled. All fields are required",
         });
     }
     if (req.body.favorite === undefined) {
