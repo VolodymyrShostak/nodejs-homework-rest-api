@@ -1,12 +1,14 @@
-const contacts = require("../models/contacts.json");
+const Contact = require("../models/contact");
 
-const listContacts = (req, res) => {
+const listContacts = async (req, res) => {
+  const contacts = await Contact.find({});
   res.status(200).json(contacts);
 };
 
-const getById = (req, res) => {
+const getById = async (req, res) => {
   const { id } = req.params;
-  const [contact] = contacts.filter((contact) => contact.id === id);
+
+  const contact = await Contact.findById(id);
   if (!contact) {
     return res.status(404).json({
       status: "failure",
@@ -16,22 +18,18 @@ const getById = (req, res) => {
   res.status(200).json({ contact, status: "success" });
 };
 
-const addContact = (req, res) => {
+const addContact = async (req, res) => {
   const { name, email, phone } = req.body;
-  const contact = {
-    id: Date.now(),
-    name,
-    email,
-    phone,
-  };
+
+  const newContact = await Contact.create({ name, email, phone });
   res
     .status(201)
-    .json({ contact, status: "success", message: "Contact added" });
+    .json({ newContact, status: "success", message: "Contact added" });
 };
 
-const removeContact = (req, res) => {
+const removeContact = async (req, res) => {
   const { id } = req.params;
-  const [contact] = contacts.filter((contact) => contact.id === id);
+  const contact = await Contact.findByIdAndDelete(id);
   if (!contact) {
     return res.status(404).json({
       status: "failure",
@@ -41,20 +39,36 @@ const removeContact = (req, res) => {
   res.status(200).json({ status: "success", message: "Contact deleted" });
 };
 
-const updateContact = (req, res) => {
+const updateContact = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone } = req.body;
-  const [contact] = contacts.filter((contact) => contact.id === id);
+  
+  const contact = await Contact.findByIdAndUpdate(id, req.body, { new: true });
   if (!contact) {
     return res.status(404).json({
       status: "failure",
       message: `Contact with id '${id}' not found`,
     });
   }
-  contact.name = name;
-  contact.email = email;
-  contact.phone = phone;
+  contact.name = req.body.name;
+  contact.email = req.body.email;
+  contact.phone = req.body.phone;
+  contact.favorite = req.body.favorite;
 
+  res
+    .status(200)
+    .json({ contact, status: "success", message: "Contact updated" });
+};
+const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  
+  const contact = await Contact.findByIdAndUpdate(id, req.body);
+  if (!contact) {
+    return res.status(404).json({
+      status: "failure",
+      message: `Contact with id '${id}' not found`,
+    });
+  }
+  contact.favorite = req.body.favorite;
   res
     .status(200)
     .json({ contact, status: "success", message: "Contact updated" });
@@ -66,4 +80,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact,
 };

@@ -6,9 +6,12 @@ module.exports = {
       return res
         .status(400)
         .json({
-          message: "Contact fields are not filled. All fields is required",
+          message: "Contact fields are not filled. All fields are required",
         });
     }
+    if (req.body.favorite === undefined) {
+      req.body.favorite = false;
+    };
     const { error } = addSchema.validate(req.body);
     if (error) {
       return res
@@ -23,6 +26,9 @@ module.exports = {
         message: "Missing fields for update",
       });
     }
+    if (req.body.favorite === undefined) {
+      req.body.favorite = false;
+    };
     const { error } = updateSchema.validate(req.body);
     if (error) {
       return res
