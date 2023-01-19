@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const {
-  listContacts,
-  getById,
-  removeContact,
-  addContact,
-  updateContact,
-  updateStatusContact
+  listContactsControler,
+  getByIdControler,
+  removeContactControler,
+  addContactControler,
+  updateContactControler,
+  updateStatusContactControler,
 } = require("../../controllers/cont.controllers");
 const {
   updateContactValidation,
@@ -16,11 +16,11 @@ const {
 
 
 router
-  .get("/", listContacts)
-  .get("/:id", getById)
-  .post("/", addContactValidation, addContact)
-  .delete("/:id", removeContact)
-  .put("/:id", updateContactValidation, updateContact)
-  .patch("/:id", updateContactValidation, updateStatusContact);
+  .get("/", listContactsControler)
+  .get("/:id", getByIdControler)
+  .post("/", addContactValidation, addContactControler)
+  .delete("/:id", removeContactControler)
+  .put("/:id", updateContactValidation, updateContactControler)
+  .patch("/:id", updateContactValidation, updateStatusContactControler);
 
 module.exports = router;

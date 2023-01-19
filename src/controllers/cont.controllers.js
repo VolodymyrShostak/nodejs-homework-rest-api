@@ -1,14 +1,21 @@
-const Contact = require("../models/contact");
+const {
+  getContacts,
+  getContactById,
+  addContact,
+  removeContact,
+  updateContact,
+  updateStatusContact,
+} = require("../services/postService");
 
-const listContacts = async (req, res) => {
-  const contacts = await Contact.find({});
+const listContactsControler = async (req, res) => {
+  const contacts = await getContacts();
   res.status(200).json(contacts);
 };
 
-const getById = async (req, res) => {
+const getByIdControler = async (req, res) => {
   const { id } = req.params;
 
-  const contact = await Contact.findById(id);
+  const contact = await getContactById(id);
   if (!contact) {
     return res.status(404).json({
       status: "failure",
@@ -18,18 +25,18 @@ const getById = async (req, res) => {
   res.status(200).json({ contact, status: "success" });
 };
 
-const addContact = async (req, res) => {
+const addContactControler = async (req, res) => {
   const { name, email, phone } = req.body;
+  const newContact = await addContact({ name, email, phone });
 
-  const newContact = await Contact.create({ name, email, phone });
   res
     .status(201)
     .json({ newContact, status: "success", message: "Contact added" });
 };
 
-const removeContact = async (req, res) => {
+const removeContactControler = async (req, res) => {
   const { id } = req.params;
-  const contact = await Contact.findByIdAndDelete(id);
+  const contact = await removeContact(id);
   if (!contact) {
     return res.status(404).json({
       status: "failure",
@@ -39,10 +46,10 @@ const removeContact = async (req, res) => {
   res.status(200).json({ status: "success", message: "Contact deleted" });
 };
 
-const updateContact = async (req, res) => {
+const updateContactControler = async (req, res) => {
   const { id } = req.params;
-  
-  const contact = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+  const body = req.body;
+  const contact = await updateContact(id, body);
   if (!contact) {
     return res.status(404).json({
       status: "failure",
@@ -58,10 +65,10 @@ const updateContact = async (req, res) => {
     .status(200)
     .json({ contact, status: "success", message: "Contact updated" });
 };
-const updateStatusContact = async (req, res) => {
+const updateStatusContactControler = async (req, res) => {
   const { id } = req.params;
-  
-  const contact = await Contact.findByIdAndUpdate(id, req.body);
+  const body= req.body;
+  const contact = await updateStatusContact(id, body);
   if (!contact) {
     return res.status(404).json({
       status: "failure",
@@ -75,10 +82,10 @@ const updateStatusContact = async (req, res) => {
 };
 
 module.exports = {
-  listContacts,
-  getById,
-  removeContact,
-  addContact,
-  updateContact,
-  updateStatusContact,
+  listContactsControler,
+  getByIdControler,
+  removeContactControler,
+  addContactControler,
+  updateContactControler,
+  updateStatusContactControler,
 };
