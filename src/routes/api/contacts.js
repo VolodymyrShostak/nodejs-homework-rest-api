@@ -8,6 +8,7 @@ const {
   updateContactControler,
   updateStatusContactControler,
 } = require("../../controllers/cont.controllers");
+const { asyncWrapper } = require("../../helpers/apiHelpers");
 const {
   updateContactValidation,
   addContactValidation,
@@ -16,11 +17,11 @@ const {
 
 
 router
-  .get("/", listContactsControler)
-  .get("/:id", getByIdControler)
-  .post("/", addContactValidation, addContactControler)
-  .delete("/:id", removeContactControler)
-  .put("/:id", updateContactValidation, updateContactControler)
-  .patch("/:id", updateContactValidation, updateStatusContactControler);
+  .get("/", asyncWrapper(listContactsControler))
+  .get("/:id", asyncWrapper(getByIdControler))
+  .post("/", addContactValidation, asyncWrapper(addContactControler))
+  .delete("/:id", asyncWrapper(removeContactControler))
+  .put("/:id", updateContactValidation, asyncWrapper(updateContactControler))
+  .patch("/:id", updateContactValidation, asyncWrapper(updateStatusContactControler));
 
 module.exports = router;

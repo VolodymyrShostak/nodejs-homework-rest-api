@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const Contact = new Schema({
   name: {
     type: String,
+    unique: true,
     required: [true, "Set name for contact"],
   },
   email: {
