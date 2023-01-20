@@ -14,13 +14,23 @@ app.use(express.json());
 
 app.use("/api/contacts", contactsRouter);
 
-app.use((req, res) => {
-  res.status(404).json({ status: "failure", code: 404, message: "Not found" });
-});
-
-
 app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message });
+  if (err?.error?.isJoi) {
+    return res.status(400).json({
+      status: "failure",
+      message: err.error.toString
+    });
+  }
+  if (err?.code === 11000) {
+    return res.status(400).json({ status: "failure", message: "Duplicate key error" });
+  }
+  if (err) {
+    return res.status(500).json({ status: "failure", message: "Internal server error" });
+  }
+  res.status(404).json({ status: "failure", message: "Endpoint not found" });
 });
+
+
+
 
 module.exports = app;
