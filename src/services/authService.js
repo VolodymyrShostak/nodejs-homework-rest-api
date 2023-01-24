@@ -7,7 +7,7 @@ const regisrtation = async (email, password) => {
     
     const user = new User({
         email,
-        password: await bcrypt.hash(password, 10),
+        password
     });
   await user.save();
 };
@@ -22,7 +22,7 @@ const login = async (email, password) => {
     }
     const token = jsonwebtoken.sign({
         id: user._id,
-        createdAt: user.createdAt
+        email: user.email,
     }, process.env.JWT_SECRET)
     return token;
 

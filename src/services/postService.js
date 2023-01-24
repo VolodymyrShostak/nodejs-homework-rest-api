@@ -1,7 +1,7 @@
 const Contact = require("../models/contactModel");
 
-const getContacts = async() => {
-    const contacts = await Contact.find({});
+const getContacts = async(_id) => {
+    const contacts = await Contact.find({owner: _id});
     return contacts;
 };
 const getContactById = async(id) => {
@@ -9,8 +9,9 @@ const getContactById = async(id) => {
     
     return contact;
 };
-const addContact = async ({ name, email, phone }) => {
-  const newContact = await Contact.create({ name, email, phone });
+const addContact = async ({ name, email, phone }, id) => {
+    
+  const newContact = await Contact.create({ name, email, phone, owner: id } );
   return newContact;
 };
 const removeContact = async(id) => {

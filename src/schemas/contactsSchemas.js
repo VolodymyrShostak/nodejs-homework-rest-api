@@ -7,10 +7,7 @@ const addSchema = Joi.object({
     .required(),
   phone: Joi.number().integer().required().required(),
   favorite: Joi.boolean(),
-  owner: {
-    // type: SchemaTypes.ObjectId,
-    ref: "user",
-  },
+  
 });
 
 const updateSchema = Joi.object({
@@ -21,10 +18,7 @@ const updateSchema = Joi.object({
   }),
   phone: Joi.string().trim(),
   favorite: Joi.boolean(),
-  owner: {
-    // type: SchemaTypes.ObjectId,
-    ref: "user",
-  },
-}).or("name", "email", "phone", "favorite", "owner");
+  
+}).or("name", "email", "phone", "favorite");
   
 module.exports = { addSchema, updateSchema };

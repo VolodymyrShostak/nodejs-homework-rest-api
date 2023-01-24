@@ -21,10 +21,12 @@ const User = new Schema({
   token: String
 
 });
-// User.pre('save', async function () {
-//     if (this.isNew) {
-//         this.password = await bcrypt.hash(this.password, 10);
-//     }
-// })
+User.pre('save', async function () {
+    if (this.isNew) {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+    
+
+})
 
 module.exports = mongoose.model("User", User);

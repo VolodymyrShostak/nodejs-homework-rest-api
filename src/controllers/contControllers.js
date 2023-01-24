@@ -8,15 +8,18 @@ const {
 } = require("../services/postService");
 
 const listContactsControler = async (req, res) => {
-  const contacts = await getContacts();
+  const { id } = req.user;
+  const contacts = await getContacts(id);
   res.status(200).json(contacts);
 };
 
 const getByIdControler = async (req, res) => {
+ 
   const { id } = req.params;
+  console.log(id);
 
   const contact = await getContactById(id);
-  if (!contact) {        
+  if (!contact) {
     return res.status(404).json({
       status: "failure",
       message: ` Contact with id '${id}' not found`,
@@ -27,7 +30,8 @@ const getByIdControler = async (req, res) => {
 
 const addContactControler = async (req, res) => {
   const { name, email, phone } = req.body;
-  const newContact = await addContact({ name, email, phone });
+  const { id } = req.user;
+  const newContact = await addContact({ name, email, phone }, id);
 
   res
     .status(201)
@@ -36,6 +40,7 @@ const addContactControler = async (req, res) => {
 
 const removeContactControler = async (req, res) => {
   const { id } = req.params;
+  
   const contact = await removeContact(id);
   if (!contact) {
     return res.status(404).json({
@@ -47,6 +52,7 @@ const removeContactControler = async (req, res) => {
 };
 
 const updateContactControler = async (req, res) => {
+
   const { id } = req.params;
   const body = req.body;
   const contact = await updateContact(id, body);
@@ -67,7 +73,7 @@ const updateContactControler = async (req, res) => {
 };
 const updateStatusContactControler = async (req, res) => {
   const { id } = req.params;
-  const body= req.body;
+  const body = req.body;
   const contact = await updateStatusContact(id, body);
   if (!contact) {
     return res.status(404).json({
