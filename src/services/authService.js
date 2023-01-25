@@ -8,7 +8,8 @@ const regisrtation = async (email, password) => {
     email,
     password,
   });
-  await user.save();
+    await user.save();
+return user;
 };
 
 const login = async (email, password) => {

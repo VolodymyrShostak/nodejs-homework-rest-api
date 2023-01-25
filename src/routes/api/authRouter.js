@@ -17,7 +17,7 @@ router
     autorisationsValidation,
     asyncWrapper(registrationController)
   )
-  .post("/login", autorisationsValidation, asyncWrapper(loginController))
+  .get("/login", autorisationsValidation, asyncWrapper(loginController))
   .post("/logout", authMiddleware, asyncWrapper(logoutController))
   .get("/current", authMiddleware, asyncWrapper(getCurrentUserController));
   

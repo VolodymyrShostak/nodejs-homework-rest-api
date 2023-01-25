@@ -1,14 +1,22 @@
 const { regisrtation, login, logout, getCurrentUser } = require("../services/authService");
 
 const registrationController = async (req, res) => {
-  const { email, password } = req.body;
-  await regisrtation(email, password);
-  res.status(201).json({ status: "success", message: "Success" });
+    const { email, password } = req.body;
+    const user = await regisrtation(email, password);
+   
+    res
+        .status(201)
+        .json({ user: { email: `${user.email}`, subscription: `${user.subscription}` } });
 };
 const loginController = async (req, res) => {
   const { email, password } = req.body;
   const token = await login(email, password);
-  res.status(200).json({ status: "success", token, message: "Success" });
+  res
+    .status(200)
+    .json({
+      token,
+      user: { email: `${email}` },
+    });
 };
 const logoutController = async (req, res) => {
   const { id } = req.user;
