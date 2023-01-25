@@ -7,6 +7,7 @@ const addSchema = Joi.object({
     .required(),
   phone: Joi.number().integer().required().required(),
   favorite: Joi.boolean(),
+  
 });
 
 const updateSchema = Joi.object({
@@ -15,10 +16,9 @@ const updateSchema = Joi.object({
     minDomainSegments: 2,
     tlds: { allow: ["com", "net"] },
   }),
-  phone: Joi.string()
-    .trim(),
+  phone: Joi.string().trim(),
   favorite: Joi.boolean(),
-
+  
 }).or("name", "email", "phone", "favorite");
   
 module.exports = { addSchema, updateSchema };
