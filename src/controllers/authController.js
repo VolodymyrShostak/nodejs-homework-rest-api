@@ -1,4 +1,4 @@
-const { regisrtation, login, logout } = require("../services/authService");
+const { regisrtation, login, logout, getCurrentUser } = require("../services/authService");
 
 const registrationController = async (req, res) => {
   const { email, password } = req.body;
@@ -16,9 +16,17 @@ const logoutController = async (req, res) => {
 
   res.status(204).json({ status: "success", message: "No content" });
 };
+const getCurrentUserController = async (req, res) => {
+    const { id } = req.user;
+    const user = await getCurrentUser(id);
+    res
+      .status(200)
+      .json({ email: `${user.email}`, subscription:`${user.subscription}` });
+}
 
 module.exports = {
   registrationController,
   loginController,
   logoutController,
+  getCurrentUserController,
 };
