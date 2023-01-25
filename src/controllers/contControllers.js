@@ -16,8 +16,7 @@ const listContactsControler = async (req, res) => {
 const getByIdControler = async (req, res) => {
  
   const { id } = req.params;
-  console.log(id);
-
+ 
   const contact = await getContactById(id);
   if (!contact) {
     return res.status(404).json({

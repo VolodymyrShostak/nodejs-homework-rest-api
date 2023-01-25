@@ -27,8 +27,16 @@ const login = async (email, password) => {
     return token;
 
 };
+const logout = async (id) => {
+ const user = await User.findByIdAndUpdate(id, { token: null });
+
+ if (!user) throw new NotAuthorizedError("Not authorized");
+
+ 
+}
 
 module.exports = {
   regisrtation,
-  login,
+    login,
+  logout
 };

@@ -1,7 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
-const contactsRouter = require("./routes/api/contacts");
+const contactsRouter = require("./routes/api/contactsRouter");
 const usersRouter = require("./routes/api/authRouter");
 
 
@@ -24,7 +24,7 @@ app.use((err, req, res, next) => {
     });
   }
   if (err?.code === 11000) {
-    return res.status(400).json({ status: "failure", message: "Duplicate key error" });
+    return res.status(409).json({ status: "failure", message: "Duplicate key error" });
   }
   if (err) {
     return res.status(500).json({ status: "failure", message: err.message });
