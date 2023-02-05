@@ -1,4 +1,4 @@
-const { regisrtation, login, logout, getCurrentUser } = require("../services/authService");
+const { regisrtation, login, logout, getCurrentUser, updateAvatar } = require("../services/authService");
 
 const registrationController = async (req, res) => {
     const { email, password } = req.body;
@@ -31,10 +31,18 @@ const getCurrentUserController = async (req, res) => {
       .status(200)
       .json({ email: `${user.email}`, subscription:`${user.subscription}` });
 }
+const updateAvatarController = async (req, res) => {
+  const { id } = req.user;
+  const { path } = req.file;
+  const avatarURL = await updateAvatar(id, path);
+  res.status(200).json({ avatarURL });
+};
 
 module.exports = {
   registrationController,
   loginController,
   logoutController,
   getCurrentUserController,
+  updateAvatarController,
+  
 };

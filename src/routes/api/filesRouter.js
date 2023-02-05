@@ -1,31 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const upload=multer({dest:'public/avatars/'});
+const fs = require("fs/promises");
 
-// const path = require("path");
 
-// const FILE_DIR = path.join(__dirname, "../../", "public/avatars");
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, FILE_DIR);
-//   },
-//   filename: function (req, file, cb) {
-//     const [filename, extension] = file.originalname.split(".");
-//     cb(null, `${filename}.${extension}`);
-//   },
-// });
-// const { asyncWrapper } = require("../../helpers/apiHelpers");
-// const { avatarController } = require("../../controllers/avatarsController");
-// const uploadMiddleware = multer({ storage });
+
+const upload = multer();
 
 router
   .post(
-    "/", upload.single('avatar'), (req, res) => {
-      res.json({ file: req.file });
+    "/", upload.single('avatar'), async (req, res) => {
+      const fileName ='avatar - '+ Date.now() ;
+      const fileType= req.file.mimetype.split('/')[1];
+      await fs.writeFile(`./public/avatars/${fileName}.${fileType}`, req.file.buffer);
+      res.send('ok');
     }
    
   )
-  // .use("/download", express.static(FILE_DIR));
+  
 
 module.exports = router;

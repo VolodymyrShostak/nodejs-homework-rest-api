@@ -5,6 +5,7 @@ const {
   loginController,
   logoutController,
   getCurrentUserController,
+  updateAvatarController,
 } = require("../../controllers/authController");
 const { asyncWrapper } = require("../../helpers/apiHelpers");
 const { autorisationsValidation } = require("../../middlewares/validationMiddleware");
@@ -19,7 +20,8 @@ router
   )
   .get("/login", autorisationsValidation, asyncWrapper(loginController))
   .post("/logout", authMiddleware, asyncWrapper(logoutController))
-  .get("/current", authMiddleware, asyncWrapper(getCurrentUserController));
+  .get("/current", authMiddleware, asyncWrapper(getCurrentUserController))
+  .putch("/avatars", authMiddleware, asyncWrapper(updateAvatarController));
   
 
 module.exports = router;

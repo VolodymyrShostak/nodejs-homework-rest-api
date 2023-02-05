@@ -2,14 +2,17 @@ const User = require("../models/userModel");
 const jsonwebtoken = require("jsonwebtoken");
 const { NotAuthorizedError } = require("../helpers/errors");
 const bcrypt = require("bcrypt");
+const gravatar = require("gravatar");
 
 const regisrtation = async (email, password) => {
+  const avatarURL = gravatar.url(email);
   const user = new User({
     email,
     password,
+    avatarURL
   });
-    await user.save();
-return user;
+  await user.save();
+  return user;
 };
 
 const login = async (email, password) => {
@@ -41,10 +44,18 @@ const getCurrentUser = async (id) => {
   }
   return user;
 };
+const updateAvatar = async (id, path) => { 
+  if (!path) {
+    throw new NotAuthorizedError("Avatar is required");
+  }
+};
+
+
 
 module.exports = {
   regisrtation,
   login,
   logout,
   getCurrentUser,
-};
+  updateAvatar,
+}
