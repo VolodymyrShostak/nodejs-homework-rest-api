@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const path = require("path");
 const contactsRouter = require("./routes/api/contactsRouter");
 const usersRouter = require("./routes/api/authRouter");
 
@@ -8,13 +9,16 @@ const usersRouter = require("./routes/api/authRouter");
 const app = express();
  
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
+const pathFile = path.resolve("./src/public");
 
+app.use(express.static(pathFile));
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/contacts", contactsRouter);
 app.use("/api/users", usersRouter);
+
 
 app.use((err, req, res, next) => {
   if (err?.error?.isJoi) {
