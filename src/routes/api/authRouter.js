@@ -22,11 +22,11 @@ router
   .get("/login", autorisationsValidation, asyncWrapper(loginController))
   .post("/logout", authMiddleware, asyncWrapper(logoutController))
   .get("/current", authMiddleware, asyncWrapper(getCurrentUserController))
-  .get("/verify/:verificationToken", asyncWrapper(verifyUserController))
-  .post(
-    "/verify",
-    reqValidation(verificationEmailJoiSchema),
-    asyncWrapper(resendEmailController)
-  );
+  .get("/verify/:verificationToken", asyncWrapper(verifyUserController));
+  // .post(
+  //   "/verify",
+  //   reqValidation(verificationEmailJoiSchema),
+  //   asyncWrapper(resendEmailController)
+  // );
 
 module.exports = router;

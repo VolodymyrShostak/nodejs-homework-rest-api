@@ -3,13 +3,14 @@ const { regisrtation, login, logout, getCurrentUser, verifyUser } = require("../
 
 const registrationController = async (req, res) => {
     const { email, password } = req.body;
-    const user = await regisrtation(email, password);
-   
+  const { user } = await regisrtation(email, password);
+    console.log(user);
      
     res
         .status(201)
-        .json({ user: { email: `${user.email}`, subscription: `${user.subscription}` } });
+        .json({  user: { email: `${user.email}`, subscription: `${user.subscription}`, verificationToken: `${user.verificationToken}`}  });
 };
+
 const loginController = async (req, res) => {
   const { email, password } = req.body;
   const token = await login(email, password);
@@ -39,6 +40,7 @@ const getCurrentUserController = async (req, res) => {
 const verifyUserController = async (req, res) => {
   const { verificationToken } = req.params;
   const user = await verifyUser(verificationToken);
+  console.log(user);
   if (!user) {
     return res.status(404).json({
       status: "failure",
