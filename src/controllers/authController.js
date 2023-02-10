@@ -1,9 +1,11 @@
-const { regisrtation, login, logout, getCurrentUser } = require("../services/authService");
+const { regisrtation, login, logout, getCurrentUser, verifyUser } = require("../services/authService");
+
 
 const registrationController = async (req, res) => {
     const { email, password } = req.body;
     const user = await regisrtation(email, password);
    
+     
     res
         .status(201)
         .json({ user: { email: `${user.email}`, subscription: `${user.subscription}` } });
@@ -29,12 +31,27 @@ const getCurrentUserController = async (req, res) => {
     const user = await getCurrentUser(id);
     res
       .status(200)
-      .json({ email: `${user.email}`, subscription:`${user.subscription}` });
+      .json({
+        email: `${user.email}`, data: {
+        message: "Verification successful"
+      } });
 }
+const verifyUserController = async (req, res) => {
+  const { verificationToken } = req.params;
+  const user = await verifyUser(verificationToken);
+  if (!user) {
+    return res.status(404).json({
+      status: "failure",
+      message: `User not found`,
+    });
+  }
+  res.status(200).json({ status: "success", message: "Verification successful" });
+};
 
 module.exports = {
   registrationController,
   loginController,
   logoutController,
   getCurrentUserController,
+  verifyUserController,
 };
