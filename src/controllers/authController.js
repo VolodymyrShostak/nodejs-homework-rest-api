@@ -1,10 +1,10 @@
-const { regisrtation, login, logout, getCurrentUser, verifyUser } = require("../services/authService");
+const { regisrtation, login, logout, getCurrentUser, verifyUser, resendEmail } = require("../services/authService");
 
 
 const registrationController = async (req, res) => {
     const { email, password } = req.body;
   const { user } = await regisrtation(email, password);
-    console.log(user);
+    
      
     res
         .status(201)
@@ -49,11 +49,31 @@ const verifyUserController = async (req, res) => {
   }
   res.status(200).json({ status: "success", message: "Verification successful" });
 };
-
+const resendEmailController = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({
+      status: "failure",
+      message: `missing required field email`,
+    });
+  }
+ const user= await resendEmail(email);
+  if (user.verify) {
+    return res.status(400).json({
+      status: "failure",
+      message: `Verification has already been passed`,
+    });
+  }
+  
+  res.status(200).json({
+    message: "Verification email sent",
+  });
+};
 module.exports = {
   registrationController,
   loginController,
   logoutController,
   getCurrentUserController,
   verifyUserController,
+  resendEmailController,
 };

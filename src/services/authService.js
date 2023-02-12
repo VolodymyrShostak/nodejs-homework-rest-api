@@ -11,7 +11,6 @@ const regisrtation = async (email, password) => {
     email,
     password,
     verificationToken: uuidv4(),
-
   });
 
   const msg = {
@@ -21,25 +20,24 @@ const regisrtation = async (email, password) => {
     html: `<a href="http://localhost:3000/api/users/verify/${user.verificationToken}">Please verify your email</a>`,
   };
   await sgMail.send(msg);
-  
-  // if (user.verify) {
-  //   throw new NotAuthorizedError("Sorry, but your email not verify");
-  // }
-  // const verificationToken = uuidv4();
- 
+
   await user.save();
 
-  return { user};
+  return { user };
 };
 
 const login = async (email, password) => {
-  const user = await User.findOne({ email, verify: true });
+  const user = await User.findOne({ email });
   if (!user) {
     throw new NotAuthorizedError("Email is wrong");
   }
   if (!(await bcrypt.compare(password, user.password))) {
     throw new NotAuthorizedError("Password is wrong");
   }
+  if (!user.verify) {
+    throw new NotAuthorizedError("Sorry, but your email not verify");
+  }
+
   const token = jsonwebtoken.sign(
     {
       id: user._id,
@@ -63,15 +61,35 @@ const getCurrentUser = async (id) => {
 };
 const verifyUser = async (verificationToken) => {
   const user = await User.findOne({ verificationToken });
- 
-  await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: null });
+
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: null,
+  });
   return user;
 };
 
+const resendEmail = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new NotAuthorizedError("Email is wrong");
+  }
+  if (user.verificationToken) {
+    const msg = {
+      to: email,
+      from: "shostakvolodymyr24@gmail.com",
+      subject: "Email verification",
+      html: `<a href="http://localhost:3000/api/users/verify/${user.verificationToken}">Please verify your email</a>`,
+    };
+    await sgMail.send(msg);
+  }
+  return user;
+};
 module.exports = {
   regisrtation,
   login,
   logout,
   getCurrentUser,
   verifyUser,
+  resendEmail,
 };
