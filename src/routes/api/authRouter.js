@@ -24,7 +24,12 @@ router
   .get("/login", autorisationsValidation, asyncWrapper(loginController))
   .post("/logout", authMiddleware, asyncWrapper(logoutController))
   .get("/current", authMiddleware, asyncWrapper(getCurrentUserController))
-  .patch("/avatars", authMiddleware, avatarMiddleware, asyncWrapper(updateAvatarController))
+  .patch(
+    "/avatars",
+    authMiddleware,
+    avatarMiddleware.single("avatar"),
+    asyncWrapper(updateAvatarController)
+  )
   .get("/verify/:verificationToken", asyncWrapper(verifyUserController))
   .post("/verify", autorisationsValidation, asyncWrapper(resendEmailController));
   

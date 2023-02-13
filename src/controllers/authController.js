@@ -31,6 +31,7 @@ const loginController = async (req, res) => {
     user: { email: `${email}` },
   });
 };
+
 const logoutController = async (req, res) => {
   const { id } = req.user;
   await logout(id);
