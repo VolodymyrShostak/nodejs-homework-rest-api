@@ -5,7 +5,7 @@ const {
   removeContact,
   updateContact,
   updateStatusContact,
-} = require("../services/postService");
+} = require("../services/contService");
 
 const listContactsControler = async (req, res) => {
   const { id } = req.user;

@@ -19,6 +19,14 @@ const User = new Schema({
   },
   avatarURL: String,
   token: String,
+  verificationToken: {
+    type: String,
+    require: [true, "Verify token is required"],
+  },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
 });
 User.pre('save', async function () {
     if (this.isNew) {

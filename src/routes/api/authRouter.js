@@ -5,6 +5,8 @@ const {
   loginController,
   logoutController,
   getCurrentUserController,
+  verifyUserController,
+  resendEmailController,
   updateAvatarController,
 } = require("../../controllers/authController");
 const { asyncWrapper } = require("../../helpers/apiHelpers");
@@ -27,7 +29,9 @@ router
     authMiddleware,
     avatarMiddleware.single("avatar"),
     asyncWrapper(updateAvatarController)
-  );
+  )
+  .get("/verify/:verificationToken", asyncWrapper(verifyUserController))
+  .post("/verify", autorisationsValidation, asyncWrapper(resendEmailController));
   
 
 module.exports = router;
