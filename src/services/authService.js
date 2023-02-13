@@ -5,12 +5,17 @@ const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail");
 const { v4: uuidv4 } = require("uuid");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const gravatar = require("gravatar");
+const Jimp = require("jimp");
+const path = require("path");
 
 const regisrtation = async (email, password) => {
+  const avatarURL = gravatar.url(email);
   const user = new User({
     email,
     password,
     verificationToken: uuidv4(),
+    avatarURL,
   });
 
   const msg = {
@@ -59,6 +64,38 @@ const getCurrentUser = async (id) => {
   }
   return user;
 };
+
+const updateAvatar = async (id, file) => {
+  if (!file) {
+    return Promise.reject(new Error("File not found"));
+  }
+
+  const { path: temporaryPath, originalname } = file;
+
+  const newName = `${id}_${originalname}`;
+
+  const avatarsDir = path.resolve("./src/public/avatars");
+
+  const newPath = path.join(avatarsDir, newName);
+
+  await Jimp.read(temporaryPath)
+    .then((avatar) => {
+      return avatar.resize(250, 250).write(newPath);
+    })
+    .catch((err) => {
+      throw err;
+    });
+
+  const avatarURL = path.join("avatars", newName);
+
+  const updatedUser = await User.findOneAndUpdate(
+    { avatarURL },
+    {
+      new: true,
+    }
+  );
+  return updatedUser.avatarURL;
+};
 const verifyUser = async (verificationToken) => {
   const user = await User.findOne({ verificationToken });
 
@@ -92,4 +129,5 @@ module.exports = {
   getCurrentUser,
   verifyUser,
   resendEmail,
+  updateAvatar,
 };

@@ -7,10 +7,12 @@ const {
   getCurrentUserController,
   verifyUserController,
   resendEmailController,
+  updateAvatarController,
 } = require("../../controllers/authController");
 const { asyncWrapper } = require("../../helpers/apiHelpers");
 const { autorisationsValidation } = require("../../middlewares/validationMiddleware");
-const {authMiddleware} = require("../../middlewares/authMiddleware");
+const { authMiddleware } = require("../../middlewares/authMiddleware");
+const { avatarMiddleware } = require("../../middlewares/avatarsMiddleware");
 
 router
 
@@ -22,11 +24,9 @@ router
   .get("/login", autorisationsValidation, asyncWrapper(loginController))
   .post("/logout", authMiddleware, asyncWrapper(logoutController))
   .get("/current", authMiddleware, asyncWrapper(getCurrentUserController))
+  .patch("/avatars", authMiddleware, avatarMiddleware, asyncWrapper(updateAvatarController))
   .get("/verify/:verificationToken", asyncWrapper(verifyUserController))
-  .post(
-    "/verify",
-    
-    asyncWrapper(resendEmailController)
-  );
+  .post("/verify", autorisationsValidation, asyncWrapper(resendEmailController));
+  
 
 module.exports = router;

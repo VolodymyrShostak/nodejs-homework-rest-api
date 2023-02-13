@@ -6,6 +6,7 @@ const authSchema = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
   password: Joi.string().min(6).required(),
+  
 });
 
 
